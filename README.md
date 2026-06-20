@@ -1,53 +1,33 @@
 # PDF Merge — 文档合并与排序
 
-将 PDF、Word (DOCX)、图片 (JPG/PNG) 合并为一份 PDF，并支持可视化拖拽调整页面顺序。
+将 PDF、Word (DOCX)、JPG、PNG 合并为一份 PDF，支持拖拽调整页面顺序。
 
-## 使用方式
+## 在线使用
 
-### 在线使用
-访问 **[GitHub Pages URL]**，直接拖入文件即可。
+访问 **[ssqqhuntman.github.io/merge_PDF](https://ssqqhuntman.github.io/merge_PDF/)**，拖入文件即可使用。
 
-### 本地使用
-```sh
-git clone <repo>
-cd Merge_PDF
-npx serve .          # 或 python -m http.server 8080
-# 浏览器打开 http://localhost:3000
-```
+## 如何使用
 
-## 功能
-
-- **合并**：拖入多个 PDF / DOCX / 图片文件，自动提取所有页面
-- **排序**：缩略图网格中鼠标拖拽即可调换页面顺序
-- **缩放**：滑块调整缩略图大小 (80%–250%)
-- **删除**：悬停缩略图，点击 × 删除不需要的页面
-- **导出**：一键合并导出为 PDF
+1. 打开页面，将 PDF / DOCX / JPG / PNG 文件拖入窗口，或点击「导入文件」选择
+2. 在缩略图网格中**拖拽**调整页面顺序
+3. 底部**缩放滑条**可调整缩略图大小 (80%–250%)
+4. 悬停缩略图点击 **×** 可删除不需要的页面
+5. 点击「导出 PDF」合并下载
 
 ## 格式支持
 
 | 格式 | 支持 | 备注 |
 |------|------|------|
 | PDF | ✅ | |
-| DOCX | ✅ | Word 2007+ (不含 .doc) |
+| DOCX | ✅ | Word 2007+ |
 | JPG / JPEG | ✅ | |
 | PNG | ✅ | |
-| DOC | ❌ | 请用 Word/WPS 转为 .docx |
+| DOC | ❌ | 请转为 .docx 后导入 |
 
-## 技术栈
+## 本地使用
 
-纯前端，无后端，GitHub Pages 部署。
-
-- [pdf.js](https://mozilla.github.io/pdf.js/) — PDF 渲染
-- [pdf-lib](https://pdf-lib.js.org/) — PDF 创建与操作
-- [SortableJS](https://sortablejs.github.io/Sortable/) — 拖拽排序
-- [mammoth.js](https://github.com/mwilliamson/mammoth.js) — DOCX 解析
-
-## 开发
-
-```
-.
-├── index.html       # 入口
-├── css/style.css    # Frost 主题
-├── js/              # 模块 (app / ui / file-handler / pdf-engine / thumbnail-view)
-└── docs/            # 架构文档
+```sh
+git clone https://github.com/SsQqHuNtMaN/merge_PDF.git
+cd merge_PDF
+npx serve .          # 或 python -m http.server 8080
 ```

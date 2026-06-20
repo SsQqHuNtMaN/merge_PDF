@@ -16,6 +16,10 @@ Desktop.ini
 
 # Claude local config
 .claude/
+CLAUDE.md
+
+# Dev docs (not for deployment)
+docs/
 
 # Node (if ever needed)
 node_modules/
