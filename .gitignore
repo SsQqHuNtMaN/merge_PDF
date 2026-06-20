@@ -20,6 +20,9 @@ Desktop.ini
 # Node (if ever needed)
 node_modules/
 
+# Sample / personal files — never commit
+sample/
+
 # Temp
 *.tmp
 *.log
