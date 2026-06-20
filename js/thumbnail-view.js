@@ -17,6 +17,7 @@ const ThumbnailView = (() => {
   let currentZoom = 150; // percentage
   let sortableInstance = null;
   let selectedPageId = null;
+  let refreshGen = 0;       // generation counter to cancel stale async refreshes
 
   // ── Init zoom controls ──
   function init() {
@@ -43,6 +44,7 @@ const ThumbnailView = (() => {
 
   // ── Refresh: re-render all thumbnails ──
   async function refresh() {
+    const gen = ++refreshGen;  // capture generation — cancels any stale refresh still in flight
     const pages = PDFEngine.getAllPages();
     const targetWidth = Math.round(currentZoom * 1.33);
 
@@ -52,21 +54,24 @@ const ThumbnailView = (() => {
     // Clear grid
     grid.innerHTML = '';
     grid.classList.remove('thumbnail-grid--empty');
+    _destroySortable();
 
     if (pages.length === 0) {
       grid.classList.add('thumbnail-grid--empty');
       grid.textContent = '';
-      _destroySortable();
       return;
     }
 
     // Render thumbnails
     for (const page of pages) {
+      if (gen !== refreshGen) return; // a newer refresh has started — abort
       const card = await _createThumbCard(page, targetWidth);
+      if (gen !== refreshGen) return; // aborted during async render
       grid.appendChild(card);
     }
 
-    // Re-init sortable
+    // Only init sortable if we weren't cancelled
+    if (gen !== refreshGen) return;
     _initSortable();
   }
 

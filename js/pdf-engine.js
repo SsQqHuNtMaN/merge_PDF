@@ -116,6 +116,8 @@ const PDFEngine = (() => {
     const page = imgDoc.addPage([w, h]);
     page.drawImage(image, { x: 0, y: 0, width: w, height: h });
 
+    // img.src is a blob URL that stays alive (we never revoke it)
+    // so later _renderImageThumbnail can reuse it
     const newPage = {
       id: nextId(),
       sourceType: 'image',
@@ -238,7 +240,8 @@ const PDFEngine = (() => {
       const url = URL.createObjectURL(blob);
       const img = new Image();
       img.onload = () => {
-        URL.revokeObjectURL(url);
+        // NOTE: deliberately do NOT revoke the blob URL — it is stored in
+        // imgData.src and reused for thumbnail rendering on every zoom change.
         resolve(img);
       };
       img.onerror = reject;
