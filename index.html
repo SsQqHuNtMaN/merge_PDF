@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Merge — 文档合并与排序</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Toolbar -->
+    <header class="toolbar">
+      <h1 class="toolbar__title">PDF Merge</h1>
+      <div class="toolbar__actions">
+        <button id="btn-import" class="btn btn--ghost" title="导入文件">导入文件</button>
+        <button id="btn-export" class="btn btn--primary" disabled title="合并导出 PDF">导出 PDF</button>
+      </div>
+    </header>
+
+    <!-- Drop Zone (空状态时全屏居中) -->
+    <div id="dropzone" class="dropzone dropzone--empty">
+      <div class="dropzone__content">
+        <p class="dropzone__label">拖拽文件到此处</p>
+        <p class="dropzone__hint">PDF · DOCX · JPG · PNG</p>
+      </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="file-input" class="hidden" multiple accept=".pdf,.docx,.doc,.jpg,.jpeg,.png">
+
+    <!-- Main content (hidden until files loaded) -->
+    <div id="main-content" class="main-content hidden">
+      <!-- Thumbnail grid area -->
+      <section class="thumbnail-section">
+        <div id="thumbnail-grid" class="thumbnail-grid thumbnail-grid--empty"></div>
+      </section>
+    </div>
+
+    <!-- Footer bar (hidden until files loaded) -->
+    <footer id="footer-bar" class="footer-bar hidden">
+      <div class="footer-bar__stats">
+        <span id="stat-pages">0 页</span>
+        <span class="footer-bar__stats-sep">·</span>
+        <span id="stat-files">0 个文件</span>
+      </div>
+      <div class="footer-bar__zoom">
+        <span class="btn btn--ghost" id="btn-zoom-out" style="padding:2px 6px;font-size:14px;">−</span>
+        <input type="range" id="zoom-slider" min="80" max="250" value="150" step="5">
+        <span class="footer-bar__zoom-label" id="zoom-label">150%</span>
+        <span class="btn btn--ghost" id="btn-zoom-in" style="padding:2px 6px;font-size:14px;">+</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- CDN Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- App Scripts -->
+  <script src="js/ui.js"></script>
+  <script src="js/pdf-engine.js"></script>
+  <script src="js/file-handler.js"></script>
+  <script src="js/thumbnail-view.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
