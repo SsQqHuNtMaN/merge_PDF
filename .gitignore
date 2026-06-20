@@ -21,8 +21,13 @@ CLAUDE.md
 # Dev docs (not for deployment)
 docs/
 
-# Node (if ever needed)
+# Dev tests (not for deployment)
+test/
+
+# Node (not used — this is a pure static site)
 node_modules/
+package.json
+package-lock.json
 
 # Sample / personal files — never commit
 sample/
