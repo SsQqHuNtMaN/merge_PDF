@@ -64,7 +64,7 @@ const FileHandler = (() => {
     document.body.addEventListener('drop', (e) => {
       e.preventDefault();
       // Only handle if not already handled by dropzone
-      if (e.dataTransfer.files.length > 0 && PDFEngine.getPageCount() === 0) {
+      if (e.dataTransfer.files.length > 0) {
         handleFiles(e.dataTransfer.files);
       }
     });

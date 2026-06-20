@@ -337,9 +337,12 @@ const PDFEngine = (() => {
   }
 
   async function _renderPDFThumbnail(page, targetWidth) {
+    const dpr = Math.max(2, window.devicePixelRatio);
+    const renderWidth = targetWidth * dpr;
+
     const pdfPage = await page.pdfJsDoc.getPage(page.pageIndex + 1);
     const viewport = pdfPage.getViewport({ scale: 1 });
-    const scale = targetWidth / viewport.width;
+    const scale = renderWidth / viewport.width;
     const scaledViewport = pdfPage.getViewport({ scale });
 
     const canvas = document.createElement('canvas');
@@ -360,10 +363,13 @@ const PDFEngine = (() => {
   }
 
   async function _renderImageThumbnail(page, targetWidth) {
+    const dpr = Math.max(2, window.devicePixelRatio);
+    const renderWidth = targetWidth * dpr;
+
     const img = await _loadImage(page.imgData.src);
-    const scale = targetWidth / img.naturalWidth;
+    const scale = renderWidth / img.naturalWidth;
     const canvas = document.createElement('canvas');
-    canvas.width = targetWidth;
+    canvas.width = renderWidth;
     canvas.height = img.naturalHeight * scale;
 
     const ctx = canvas.getContext('2d');
@@ -375,15 +381,18 @@ const PDFEngine = (() => {
   }
 
   async function _renderDocxThumbnail(page, targetWidth) {
+    const dpr = Math.max(2, window.devicePixelRatio);
+    const renderWidth = targetWidth * dpr;
+
     // DOCX pages were rendered as PNG during import
     // Re-render from the srcDoc page
     const srcPage = page.pdfPage;
     const { width, height } = srcPage.getSize();
-    const scale = targetWidth / width;
+    const scale = renderWidth / width;
 
     // For now, use a proxy: render a small version of what we stored
     const canvas = document.createElement('canvas');
-    canvas.width = targetWidth;
+    canvas.width = renderWidth;
     canvas.height = height * scale;
 
     const ctx = canvas.getContext('2d');

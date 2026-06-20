@@ -18,6 +18,15 @@ const App = (() => {
     // Bind export button
     UI.els.btnExport.addEventListener('click', () => _handleExport());
 
+    // Bind clear button
+    UI.els.btnClear.addEventListener('click', () => {
+      if (confirm('确定要清空所有文件吗？此操作不可撤销。')) {
+        PDFEngine.clearAll();
+        ThumbnailView.refresh();
+        UI.hideMainUI();
+      }
+    });
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       // Ctrl+O / Cmd+O: open file dialog
@@ -38,7 +47,6 @@ const App = (() => {
           // Trigger delete via thumbnail-view's internal logic
           PDFEngine.removePage(pageId);
           ThumbnailView.refresh();
-          UI.toast('页面已删除', 'info', 1500);
         }
       }
     });

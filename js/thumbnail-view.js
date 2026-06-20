@@ -11,6 +11,7 @@
  */
 const ThumbnailView = (() => {
 
+  const BASE_WIDTH = 180; // px at 100% zoom
   const grid = UI.els.thumbnailGrid;
   const zoomSlider = UI.els.zoomSlider;
   const zoomLabel = UI.els.zoomLabel;
@@ -46,7 +47,17 @@ const ThumbnailView = (() => {
   async function refresh() {
     const gen = ++refreshGen;  // capture generation — cancels any stale refresh still in flight
     const pages = PDFEngine.getAllPages();
-    const targetWidth = Math.round(currentZoom * 1.33);
+    const targetWidth = Math.round(BASE_WIDTH * (currentZoom / 100));
+
+    // Update grid column width via CSS custom property (targetWidth + padding/border headroom)
+    grid.style.setProperty('--thumb-width', `${targetWidth + 32}px`);
+
+    // FLIP Step 1: Record old positions before clearing
+    const oldRects = new Map();
+    grid.querySelectorAll('.thumb-card').forEach(card => {
+      const pageId = parseInt(card.dataset.pageId);
+      oldRects.set(pageId, card.getBoundingClientRect());
+    });
 
     // Update stats
     UI.updateStats(PDFEngine.getPageCount(), PDFEngine.getFileCount());
@@ -68,6 +79,24 @@ const ThumbnailView = (() => {
       const card = await _createThumbCard(page, targetWidth);
       if (gen !== refreshGen) return; // aborted during async render
       grid.appendChild(card);
+
+      // FLIP Steps 2-4: Animate from old position if card existed before
+      const oldRect = oldRects.get(page.id);
+      if (oldRect) {
+        const newRect = card.getBoundingClientRect();
+        const dx = oldRect.left - newRect.left;
+        const dy = oldRect.top - newRect.top;
+        if (dx !== 0 || dy !== 0) {
+          // Step 2: Apply inverse transform instantly (no transition)
+          card.style.transition = 'none';
+          card.style.transform = `translate(${dx}px, ${dy}px)`;
+          // Step 3: Force layout calculation
+          card.getBoundingClientRect();
+          // Step 4: Animate to final position
+          card.style.transition = 'transform 0.2s ease, width 0.2s ease, height 0.2s ease';
+          card.style.transform = '';
+        }
+      }
     }
 
     // Only init sortable if we weren't cancelled
@@ -170,7 +199,6 @@ const ThumbnailView = (() => {
       el.textContent = i + 1;
     });
 
-    UI.toast('页面顺序已更新', 'info', 1500);
   }
 
   // ── Selection ──
@@ -197,7 +225,6 @@ const ThumbnailView = (() => {
       _destroySortable();
     } else {
       refresh();
-      UI.toast('页面已删除', 'info', 1500);
     }
   }
 
