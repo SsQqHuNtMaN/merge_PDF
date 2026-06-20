@@ -49,6 +49,5 @@ npx serve .          # 或 python -m http.server 8080
 ├── index.html       # 入口
 ├── css/style.css    # Frost 主题
 ├── js/              # 模块 (app / ui / file-handler / pdf-engine / thumbnail-view)
-├── docs/            # 架构文档
-└── sample/input/    # 测试文件
+└── docs/            # 架构文档
 ```
